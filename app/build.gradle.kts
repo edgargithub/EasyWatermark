@@ -13,7 +13,7 @@ plugins {
 android {
     compileSdkVersion(Apps.compileSdk)
     buildToolsVersion(Apps.buildTools)
-
+    ndkVersion = "21.3.6528147"
     defaultConfig {
         applicationId = "me.rosuh.easywatermark"
         minSdkVersion(Apps.minSdk)
@@ -46,24 +46,26 @@ android {
     flavorDimensions("version")
 
     productFlavors {
-        create(googlePlay) {
-            versionNameSuffix = "-${googlePlay}"
-        }
-        create(github) {
-            versionNameSuffix = "-${github}"
-        }
-        create(coolApk) {
-            versionNameSuffix = "-${coolApk}"
-        }
+        create(googlePlay)
+        create(github)
+        create(coolApk)
         create(others) {
             isDefault = true
-            versionNameSuffix = "-${others}"
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                output.outputFileName = "ewm-v${variant.versionName}.apk"
+            }
     }
 }
 
@@ -88,6 +90,6 @@ dependencies {
     implementation(Libs.recycleView)
     implementation(Libs.constraintLayout)
     implementation(Libs.coreKtx)
-    implementation(Libs.gifDrawable)
+    implementation(Libs.exif)
     testImplementation(TestLibs.junit)
 }
